@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For Barmili 🤍</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #faf7f2;
+  --warm: #f5efe6;
+  --ink: #1a1612;
+  --ink2: #3d3530;
+  --muted: #9c8f85;
+  --accent: #c9735a;
+  --rose: #e8c4b8;
+  --paper: #fdf9f4;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.75rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  transform: translateY(18px);
+  overflow-y: auto;
+}
+.screen.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+.screen.exit { opacity: 0; transform: translateY(-18px); pointer-events: none; transition: opacity 0.35s ease, transform 0.35s ease; }
+
+/* ===== SCREEN 1: OPEN ===== */
+#s-open { background: var(--cream); text-align: center; }
+.time-label { font-family: 'Caveat', cursive; font-size: 0.9rem; color: var(--muted); margin-bottom: 3rem; letter-spacing: 0.3px; }
+.open-title { font-family: 'Caveat', cursive; font-size: 2.7rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 0.6rem; }
+.open-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 3.5rem; font-weight: 300; }
+.tap-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--ink); color: var(--cream);
+  border: none; border-radius: 2rem;
+  padding: 0.9rem 2.2rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 500;
+  cursor: pointer; letter-spacing: 0.3px;
+  transition: background 0.2s, transform 0.15s;
+}
+.tap-btn:active { transform: scale(0.97); }
+.small-note { margin-top: 1.25rem; font-size: 0.74rem; color: var(--muted); font-style: italic; }
+
+/* ===== SCREEN 2: QUESTION ===== */
+#s-question { background: #f5efe6; }
+.q-wrap { width: 100%; max-width: 340px; }
+.q-label { font-family: 'Caveat', cursive; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; display: block; }
+.q-text { font-family: 'Caveat', cursive; font-size: 2.1rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 2.5rem; }
+.q-options { display: flex; flex-direction: column; gap: 0.75rem; }
+.q-opt {
+  width: 100%; padding: 1rem 1.25rem;
+  border-radius: 0.75rem; border: 1.5px solid;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 400;
+  cursor: pointer; text-align: left;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.q-opt.yes { border-color: var(--ink); color: var(--ink); }
+.q-opt.yes:active { background: var(--ink); color: var(--cream); }
+.q-opt.no { border-color: #ccc; color: var(--muted); }
+.q-opt.no:active { background: #ece6de; }
+
+/* ===== SCREEN 3: DARE ===== */
+#s-dare { background: #fff5f3; }
+.dare-wrap { width: 100%; max-width: 340px; }
+.dare-big { font-family: 'Caveat', cursive; font-size: 3rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+.dare-sub { font-size: 0.9rem; color: var(--muted); line-height: 1.8; margin-bottom: 2rem; font-weight: 300; }
+.dare-back { font-family: 'Caveat', cursive; font-size: 1rem; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; background: none; border: none; cursor: pointer; }
+
+/* ===== SCREEN 4: GIFTS ===== */
+#s-gifts { background: var(--cream); }
+.gifts-wrap { width: 100%; max-width: 340px; }
+.gifts-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; }
+.gifts-title { font-family: 'Caveat', cursive; font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 1.75rem; }
+.gift-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.gift-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--paper);
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.gift-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); opacity: 0; transition: opacity 0.2s; }
+.gift-item:active { background: var(--warm); }
+.gift-item.opened { background: var(--warm); }
+.gift-item.opened::before { opacity: 1; }
+.gift-icon { width: 42px; height: 42px; border-radius: 0.6rem; background: var(--warm); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.gift-item.opened .gift-icon { background: #ede0d4; }
+.gift-info { flex: 1; }
+.gift-name { font-size: 0.92rem; font-weight: 500; color: var(--ink); margin-bottom: 0.15rem; }
+.gift-desc { font-size: 0.75rem; color: var(--muted); font-weight: 300; }
+.gift-arrow { font-size: 0.8rem; color: var(--muted); transition: transform 0.2s; }
+.gift-item:active .gift-arrow { transform: translateX(3px); }
+
+/* ===== INNER SCREENS ===== */
+.inner-screen {
+  position: fixed; inset: 0; z-index: 50;
+  overflow-y: auto; padding: 3.5rem 1.75rem 3rem;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-overflow-scrolling: touch;
+}
+.inner-screen.open { transform: translateX(0); }
+.back-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: none; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--muted);
+  cursor: pointer; padding: 0; margin-bottom: 2rem;
+}
+.back-btn:active { color: var(--ink); }
+.divider { width: 40px; height: 1.5px; background: var(--rose); margin: 1.5rem 0; }
+
+/* WISH */
+#inner-wish { background: var(--cream); }
+.wish-date { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 1.5rem; }
+.wish-title { font-family: 'Caveat', cursive; font-size: 2.4rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 1.75rem; }
+.wish-body { font-size: 1rem; color: var(--ink2); line-height: 1.95; font-weight: 300; margin-bottom: 2rem; }
+.wish-body strong { font-weight: 500; color: var(--ink); }
+.wish-sig { font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--accent); }
+
+/* LETTER */
+#inner-letter { background: #fdf8f0; }
+.letter-stamp { width: 44px; height: 56px; border: 1.5px solid var(--rose); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 2rem; position: relative; }
+.letter-stamp::after { content: ''; position: absolute; inset: 3px; border: 1px solid var(--rose); border-radius: 2px; }
+.letter-to { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 0.4rem; }
+.letter-name { font-family: 'Caveat', cursive; font-size: 2rem; font-weight: 700; color: var(--ink); margin-bottom: 1.75rem; }
+.letter-body { font-size: 0.95rem; line-height: 2; color: var(--ink2); font-weight: 300; border-left: 2px solid var(--rose); padding-left: 1rem; margin-bottom: 1.5rem; }
+.letter-sign { font-family: 'Caveat', cursive; font-size: 1.6rem; color: var(--ink); }
+.letter-ps { margin-top: 1.25rem; font-size: 0.8rem; color: var(--muted); font-style: italic; line-height: 1.7; }
+
+/* PHOTOS */
+#inner-photos { background: #0f0d0b; }
+#inner-photos .back-btn { color: #555; }
+.photos-miss { font-family: 'Caveat', cursive; font-size: 2rem; font-weight: 700; color: #f0ebe3; margin-bottom: 0.4rem; }
+.photos-sub { font-size: 0.8rem; color: #555; font-weight: 300; margin-bottom: 1.75rem; line-height: 1.7; }
+.photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem; }
+.photo-cell {
+  aspect-ratio: 1; border-radius: 0.6rem;
+  background: #1e1a16;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 0.4rem;
+}
+.photo-cell.tall { grid-row: span 2; }
+.ph-emoji { font-size: 2rem; }
+.ph-label { font-family: 'Caveat', cursive; font-size: 0.82rem; color: #555; text-align: center; padding: 0 0.5rem; }
+.photo-note { font-size: 0.76rem; color: #444; font-style: italic; line-height: 1.6; margin-top: 0.5rem; }
+
+/* ===== CANDLES ===== */
+#s-candles { background: #0c0a08; }
+.candle-wrap { width: 100%; max-width: 320px; text-align: center; }
+.candle-pre { font-family: 'Caveat', cursive; font-size: 1.1rem; color: #3d3530; margin-bottom: 2.5rem; }
+.flames-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 0.35rem; }
+.fl { font-size: 1.15rem; display: inline-block; animation: flick 0.55s ease infinite alternate; transition: opacity 0.4s, transform 0.4s; }
+.fl:nth-child(even) { animation-duration: 0.4s; animation-direction: alternate-reverse; }
+@keyframes flick { from { transform: rotate(-2deg) scaleX(1); } to { transform: rotate(2deg) scaleX(0.92); } }
+.fl.out { opacity: 0; transform: scale(0) !important; }
+.cake-big { font-size: 6.5rem; line-height: 1; margin-bottom: 2.5rem; }
+.wish-prompt { font-family: 'Caveat', cursive; font-size: 1.45rem; color: #3d3530; margin-bottom: 2rem; }
+.blow-btn {
+  background: none; border: 1px solid #2a2520; border-radius: 2rem;
+  color: #555; font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  padding: 0.75rem 2rem; cursor: pointer; letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+.blow-btn:active { background: #1a1612; color: #999; }
+
+/* ===== FINAL ===== */
+#s-final { background: var(--cream); text-align: center; }
+.final-wrap { max-width: 320px; }
+.final-title { font-family: 'Caveat', cursive; font-size: 2.9rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 1rem; }
+.final-sub { font-size: 0.9rem; color: var(--muted); line-height: 1.9; font-weight: 300; margin-bottom: 2.5rem; }
+.restart-link { font-size: 0.76rem; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+#confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 998; }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<!-- S1: OPEN -->
+<div class="screen active" id="s-open">
+  <p class="time-label" id="time-label"></p>
+  <h1 class="open-title">Hey, Barmili(chaotic).<br>Open this.</h1>
+  <p class="open-sub">Made this for you. Just for today.</p>
+  <button class="tap-btn" onclick="goTo('s-question')">Open →</button>
+  <p class="small-note">just a try i hope u will like it 🙂</p>
+</div>
+
+<!-- S2: QUESTION -->
+<div class="screen" id="s-question">
+  <div class="q-wrap">
+    <span class="q-label">before we go further —</span>
+    <p class="q-text">Are you ready for your surprise?</p>
+    <div class="q-options">
+      <button class="q-opt yes" onclick="goTo('s-gifts')">
+        <span>🎁</span><span>Yes</span>
+      </button>
+      <button class="q-opt no" onclick="goTo('s-dare')">
+        <span>🙄</span><span>No</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- S3: DARE -->
+<div class="screen" id="s-dare">
+  <div class="dare-wrap">
+    <p class="dare-big">Seriously?</p>
+    <p class="dare-sub">Have a look <br>Made it with efforts <br> Go back. Try again. 😑</p>
+    <button class="dare-back" onclick="goTo('s-question')">← okay, take me back</button>
+  </div>
+</div>
+
+<!-- S4: GIFTS -->
+<div class="screen" id="s-gifts">
+  <div class="gifts-wrap">
+    <p class="gifts-tag">3 things for you</p>
+    <h2 class="gifts-title">Pick one,<br>open it slowly.</h2>
+    <div class="gift-list">
+      <div class="gift-item" id="g1" onclick="openInner('wish',1)">
+        <div class="gift-icon">🎂</div>
+        <div class="gift-info">
+          <p class="gift-name">Birthday Wish</p>
+          <p class="gift-desc">something I actually want to say</p>
+        </div>
+        <span class="gift-arrow">→</span>
+      </div>
+      <div class="gift-item" id="g2" onclick="openInner('letter',2)">
+        <div class="gift-icon">✉️</div>
+        <div class="gift-info">
+          <p class="gift-name">A Letter</p>
+          <p class="gift-desc">hmm ... have a look </p>
+        </div>
+        <span class="gift-arrow">→</span>
+      </div>
+      <div class="gift-item" id="g3" onclick="openInner('photos',3)">
+        <div class="gift-icon">📷</div>
+        <div class="gift-info">
+          <p class="gift-name">Our Moments</p>
+          <p class="gift-desc">just incase if u want to remember </p>
+        </div>
+        <span class="gift-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INNER: WISH -->
+<div class="inner-screen" id="inner-wish">
+  <button class="back-btn" onclick="closeInner('wish',1)">← back</button>
+  <p class="wish-date" id="wish-date"></p>
+  <h2 class="wish-title">Happy Birthday,<br>Barmili.</h2>
+  <div class="divider"></div>
+  <p class="wish-body">
+    I hope today feels as special as you actually are .<br><br>
+    I wish u find this day where everything goes right. Where you feel seen, loved, and a little celebrated.<br><br>
+    <strong>I'm glad you exist. I mean that.</strong>
+  </p>
+  <p class="wish-sig">— with love 🤍</p>
+  <div style="margin-top: 2.5rem;">
+    <button class="tap-btn" onclick="closeInner('wish',1); setTimeout(()=>goTo('s-candles'),500)">Blow the candles →</button>
+  </div>
+</div>
+
+<!-- INNER: LETTER -->
+<div class="inner-screen" id="inner-letter">
+  <button class="back-btn" onclick="closeInner('letter',2)">← back</button>
+  <div class="letter-stamp">🤍</div>
+  <p class="letter-to">To</p>
+  <p class="letter-name">chaotic,</p>
+  <div class="letter-body">
+    There's so much I want to write but. thik ha ..! this will do <br><br>
+    I wanted to write on your birthday, you'd know — you mean a lot. And i dont want to over exaggerate it but yah...! a lot  <br><br>
+    And just want good things for you. Always.
+  </div>
+  <p class="letter-sign">— yr princee </p>
+  <p class="letter-ps">thora jaldi ma likha ha so dont mind </p>
+</div>
+
+<!-- INNER: PHOTOS -->
+<div class="inner-screen" id="inner-photos">
+  <button class="back-btn" onclick="closeInner('photos',3)">← back</button>
+  <p class="photos-miss">yah u matter</p>
+  <p class="photos-sub">the ones that live in my head rent-free.</p>
+  <div class="photo-grid">
+    <div class="photo-cell tall">
+       <img src="material/do-deewane-seher-mein-et00471950-1763731649.avif" alt="memory photo" class="photo-img" style="width: 100%; height: 100%; object-fit: cover;">
+        <span class="ph-label" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+               color: rgb(199 53 53); font-size: 30px; font-weight: bold; text-align: center;">The late nights talking about nothing</span>
+    </div>
+    <div class="photo-cell">
+       <img src="material/61yv6l1FukL.jpg" alt="memory photo" class="photo-img" style="width: 100%; height: 100%; object-fit: cover;">
+      <span class="ph-label" style="position: absolute; top: 40%;
+               left: 115%; transform: translate(-50%, -50%);
+               color: rgb(255, 255, 255); font-size: 30px; font-weight: bold; text-align: center;">just us</span>
+    </div>
+    <div class="photo-cell">
+       <img src="material/images.jpeg" alt="memory photo" class="photo-img" style="width: 100%; height: 100%; object-fit: cover;">
+      <span class="ph-label" style="position: absolute; top: 65%; left: 115%; transform: translate(-50%, -50%);
+               color: rgb(252 82 82); font-size: 30px; font-weight: bold; text-align: center;">that song</span>
+    </div>
+  </div>
+</div>
+
+<!-- S5: CANDLES -->
+<div class="screen" id="s-candles">
+  <div class="candle-wrap">
+    <p class="candle-pre">one last thing —</p>
+    <div class="flames-row" id="flames-row">
+      <span class="fl">🕯️</span>
+      <span class="fl">🕯️</span>
+      <span class="fl">🕯️</span>
+      <span class="fl">🕯️</span>
+      <span class="fl">🕯️</span>
+    </div>
+    <div class="cake-big">🎂</div>
+    <p class="wish-prompt">make a wish first.</p>
+    <button class="blow-btn" id="blow-btn" onclick="blowOne()">blow 💨</button>
+  </div>
+</div>
+
+<!-- S6: FINAL -->
+<div class="screen" id="s-final">
+  <div class="final-wrap">
+    <p class="final-title">Wish sent.<br>Happy Birthday 🤍</p>
+    <p class="final-sub">
+      Liked it ?.<br>
+      Hope today is soft and good and yours.<br><br>
+      — made this for you. 
+    </p>
+    <button class="restart-link" onclick="restartAll()">start over</button>
+  </div>
+</div>
+
+<script>
+  let cur = 's-open';
+  let flamesLeft = 5;
+
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('wish-date').textContent = dateStr;
+  const hr = d.getHours();
+  const hint = hr < 5 ? 'made at midnight 🌙' : hr < 12 ? 'made this morning ☀️' : hr < 18 ? 'made this afternoon' : 'made tonight 🌙';
+  document.getElementById('time-label').textContent = hint;
+
+  function goTo(id) {
+    const c = document.getElementById(cur);
+    const n = document.getElementById(id);
+    c.classList.add('exit');
+    setTimeout(() => c.classList.remove('active','exit'), 480);
+    setTimeout(() => n.classList.add('active'), 140);
+    cur = id;
+  }
+
+  function openInner(name) {
+    document.getElementById('inner-' + name).classList.add('open');
+  }
+
+  function closeInner(name, num) {
+    document.getElementById('inner-' + name).classList.remove('open');
+    document.getElementById('g' + num).classList.add('opened');
+  }
+
+  function blowOne() {
+    if (flamesLeft <= 0) return;
+    const flames = document.querySelectorAll('.fl');
+    flames[flamesLeft - 1].classList.add('out');
+    flamesLeft--;
+    const btn = document.getElementById('blow-btn');
+    if (flamesLeft === 0) {
+      btn.textContent = '✓ wish sent';
+      btn.style.color = '#555';
+      launchConfetti();
+      setTimeout(() => goTo('s-final'), 1800);
+    } else {
+      btn.textContent = `blow again 💨 (${flamesLeft} left)`;
+    }
+  }
+
+  function restartAll() {
+    flamesLeft = 5;
+    document.querySelectorAll('.fl').forEach(f => f.classList.remove('out'));
+    document.querySelectorAll('.gift-item').forEach(g => g.classList.remove('opened'));
+    ['wish','letter','photos'].forEach(n => document.getElementById('inner-'+n).classList.remove('open'));
+    const btn = document.getElementById('blow-btn');
+    btn.textContent = 'blow 💨';
+    btn.style.color = '#555';
+    goTo('s-open');
+  }
+
+  const cvs = document.getElementById('confetti-canvas');
+  const ctx = cvs.getContext('2d');
+  let parts = [];
+  function resize() { cvs.width = innerWidth; cvs.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+
+  function launchConfetti() {
+    parts = Array.from({length: 55}, () => ({
+      x: Math.random() * cvs.width, y: -10,
+      r: Math.random() * 5 + 3,
+      c: ['#c9735a','#d4a0a0','#d4956e','#bfad9f','#e8c4b8','#3d3530'][Math.floor(Math.random()*6)],
+      vx: (Math.random()-0.5)*3, vy: Math.random()*2.5+1.5,
+      rot: Math.random()*360, rv: (Math.random()-0.5)*5
+    }));
+    step();
+  }
+  function step() {
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    parts.forEach(p => {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.r/2, -p.r/4, p.r, p.r/2);
+      ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rv; p.vy+=0.04;
+    });
+    parts = parts.filter(p => p.y < cvs.height+20);
+    if (parts.length) requestAnimationFrame(step);
+    else ctx.clearRect(0,0,cvs.width,cvs.height);
+  }
+</script>
+</body>
+</html>
